@@ -654,8 +654,8 @@ export default function Game() {
         <div className="best-score">最高分: {bestScore}</div>
 
         <div className={`game-overlay ${gameState !== 'start' ? 'hidden' : ''}`} id="startScreen">
-          <h1 className="title">🏰 公主与王子跑酷障碍挑战 🏰</h1>
-          <p className="subtitle">帮助勇敢的王子躲避障碍，拯救公主！</p>
+          <h1 className="title">🏰 马可菠萝，蹦蹦蹦 🏰</h1>
+          <p className="subtitle">帮助勇敢的马可菠萝躲避障碍，拯救公主！</p>
           <button className="start-btn" onClick={startGame}>开始游戏</button>
           <div className="instructions">
             <p>💻 电脑：使用 <strong>↑ ↓ ← →</strong> 方向键</p>
