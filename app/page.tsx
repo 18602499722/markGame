@@ -201,51 +201,131 @@ export default function Game() {
   const drawPrincess = useCallback((ctx: CanvasRenderingContext2D) => {
     const princess = princessRef.current
     const bobY = princess.y + Math.sin(Date.now() / 300) * 3
+    const px = princess.x
+    const pw = princess.width
+    const ph = princess.height
 
-    if (princess.image) {
-      ctx.drawImage(princess.image, princess.x, bobY, princess.width, princess.height)
-    } else {
-      ctx.fillStyle = '#FFD700'
+    ctx.fillStyle = '#FFD700'
+    ctx.beginPath()
+    ctx.moveTo(px + pw / 2, bobY - ph + 5)
+    ctx.lineTo(px + pw / 2 - 15, bobY - ph + 25)
+    ctx.lineTo(px + pw / 2 + 15, bobY - ph + 25)
+    ctx.closePath()
+    ctx.fill()
+
+    ctx.beginPath()
+    ctx.moveTo(px + pw / 4, bobY - ph + 15)
+    ctx.lineTo(px + pw / 4 - 10, bobY - ph + 32)
+    ctx.lineTo(px + pw / 4 + 10, bobY - ph + 32)
+    ctx.closePath()
+    ctx.fill()
+
+    ctx.beginPath()
+    ctx.moveTo(px + pw * 3 / 4, bobY - ph + 15)
+    ctx.lineTo(px + pw * 3 / 4 - 10, bobY - ph + 32)
+    ctx.lineTo(px + pw * 3 / 4 + 10, bobY - ph + 32)
+    ctx.closePath()
+    ctx.fill()
+
+    ctx.fillStyle = '#FFA500'
+    ctx.fillRect(px + pw / 2 - 18, bobY - ph + 23, 36, 5)
+
+    ctx.fillStyle = '#FFE4B5'
+    ctx.fillRect(px + pw / 4 + 2, bobY - ph + 40, pw / 2 - 4, 45)
+
+    ctx.fillStyle = '#8B4513'
+    ctx.fillRect(px + pw / 4 + 8, bobY - ph + 48, 6, 6)
+    ctx.fillRect(px + pw * 3 / 4 - 14, bobY - ph + 48, 6, 6)
+
+    ctx.fillStyle = '#FFE4B5'
+    ctx.fillRect(px + pw / 4 + 5, bobY - ph + 60, pw / 2 - 10, 8)
+
+    ctx.fillStyle = '#FF69B4'
+    ctx.beginPath()
+    ctx.arc(px + pw / 2, bobY - ph + 82, 25, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.fillRect(px + pw / 6, bobY - ph + 85, pw / 6, 60)
+    ctx.fillRect(px + pw * 2 / 3, bobY - ph + 85, pw / 6, 60)
+
+    ctx.fillStyle = '#FF1493'
+    ctx.fillRect(px + pw / 6, bobY - ph + 100, pw * 2 / 3, 45)
+    ctx.fillRect(px + pw / 4, bobY - ph + 145, pw / 2, 25)
+
+    ctx.fillStyle = '#FF69B4'
+    ctx.fillRect(px, bobY - ph / 3 + 20, pw / 5, 35)
+    ctx.fillRect(px + pw - pw / 5, bobY - ph / 3 + 20, pw / 5, 35)
+
+    ctx.fillStyle = '#FFE4B5'
+    ctx.fillRect(px + pw / 5 + 2, bobY - ph + 65, pw / 10, 6)
+    ctx.fillRect(px + pw * 3 / 5, bobY - ph + 65, pw / 10, 6)
+
+    ctx.fillStyle = '#000'
+    ctx.beginPath()
+    ctx.arc(px + pw / 4 + 10, bobY - ph + 50, 4, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(px + pw * 3 / 4 - 10, bobY - ph + 50, 4, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.fillStyle = '#000'
+    ctx.beginPath()
+    ctx.arc(px + pw / 4 + 10, bobY - ph + 49, 1.5, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(px + pw * 3 / 4 - 10, bobY - ph + 49, 1.5, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.strokeStyle = '#000'
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.arc(px + pw / 2, bobY - ph + 62, 8, 0.1 * Math.PI, 0.9 * Math.PI)
+    ctx.stroke()
+
+    ctx.fillStyle = '#FF69B4'
+    ctx.beginPath()
+    ctx.arc(px + pw / 4 + 15, bobY - ph + 72, 5, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.arc(px + pw * 3 / 4 - 15, bobY - ph + 72, 5, 0, Math.PI * 2)
+    ctx.fill()
+
+    const flowerPositions = [
+      { x: px + pw / 3, y: bobY - ph + 110, size: 8 },
+      { x: px + pw * 2 / 3, y: bobY - ph + 120, size: 6 },
+      { x: px + pw / 2, y: bobY - ph + 130, size: 10 },
+      { x: px + pw / 3 + 5, y: bobY - ph + 145, size: 7 },
+      { x: px + pw * 2 / 3 - 5, y: bobY - ph + 150, size: 8 },
+      { x: px + pw / 4 + 10, y: bobY - ph + 160, size: 6 },
+      { x: px + pw * 3 / 4 - 10, y: bobY - ph + 158, size: 7 },
+    ]
+
+    flowerPositions.forEach((flower, index) => {
+      const sway = Math.sin(Date.now() / 400 + index * 0.7) * 2
+      const fx = flower.x + sway
+      const fy = flower.y
+      const fs = flower.size
+
+      for (let i = 0; i < 5; i++) {
+        const angle = (i / 5) * Math.PI * 2 + Date.now() / 2000
+        const petalX = fx + Math.cos(angle) * fs
+        const petalY = fy + Math.sin(angle) * fs * 0.6
+        ctx.fillStyle = '#FFD700'
+        ctx.beginPath()
+        ctx.ellipse(petalX, petalY, fs * 0.6, fs * 0.35, angle, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      ctx.fillStyle = '#FFA500'
       ctx.beginPath()
-      ctx.arc(princess.x + princess.width / 2, bobY - princess.height + 15, princess.width / 4, 0, Math.PI * 2)
+      ctx.arc(fx, fy, fs * 0.4, 0, Math.PI * 2)
       ctx.fill()
 
-      ctx.fillStyle = '#FFE4B5'
-      ctx.fillRect(princess.x + princess.width / 5, bobY - princess.height + 30, princess.width * 3 / 5, princess.height / 2)
-
-      ctx.fillStyle = '#FFD700'
-      ctx.fillRect(princess.x + princess.width / 6, bobY - princess.height / 3, princess.width * 4 / 6, princess.height / 2.5)
-
-      ctx.fillStyle = '#FF69B4'
+      ctx.fillStyle = '#8B4513'
       ctx.beginPath()
-      ctx.moveTo(princess.x, bobY - princess.height / 3)
-      ctx.lineTo(princess.x - princess.width / 3, bobY + princess.height / 6)
-      ctx.lineTo(princess.x + princess.width / 5, bobY + princess.height / 6)
-      ctx.closePath()
+      ctx.arc(fx - fs * 0.1, fy - fs * 0.1, fs * 0.12, 0, Math.PI * 2)
       ctx.fill()
-
-      ctx.fillStyle = '#FF69B4'
-      ctx.beginPath()
-      ctx.moveTo(princess.x + princess.width, bobY - princess.height / 3)
-      ctx.lineTo(princess.x + princess.width + princess.width / 3, bobY + princess.height / 6)
-      ctx.lineTo(princess.x + princess.width - princess.width / 5, bobY + princess.height / 6)
-      ctx.closePath()
-      ctx.fill()
-
-      ctx.fillStyle = '#000'
-      ctx.beginPath()
-      ctx.arc(princess.x + princess.width / 3, bobY - princess.height + 20, 3, 0, Math.PI * 2)
-      ctx.arc(princess.x + princess.width * 2 / 3, bobY - princess.height + 20, 3, 0, Math.PI * 2)
-      ctx.fill()
-
-      ctx.fillStyle = '#FF69B4'
-      ctx.beginPath()
-      ctx.moveTo(princess.x + princess.width * 3 / 4, bobY - princess.height + 25)
-      ctx.lineTo(princess.x + princess.width, bobY - princess.height + 22)
-      ctx.lineTo(princess.x + princess.width * 3 / 4, bobY - princess.height + 18)
-      ctx.closePath()
-      ctx.fill()
-    }
+    })
   }, [])
 
   const drawPrince = useCallback((ctx: CanvasRenderingContext2D) => {
@@ -256,49 +336,44 @@ export default function Game() {
       princeY = GROUND_Y - 40
     }
 
-    ctx.fillStyle = '#8B0000'
-    ctx.beginPath()
-    ctx.arc(prince.x + prince.width / 2, princeY - 65, 18, 0, Math.PI * 2)
-    ctx.fill()
-
-    ctx.fillStyle = '#FFE4C4'
-    ctx.fillRect(prince.x + 10, princeY - 47, prince.width - 20, 35)
+    ctx.fillStyle = '#4169E1'
+    ctx.fillRect(prince.x - 8, princeY - 70, 66, 70)
 
     ctx.fillStyle = '#4169E1'
     const bodyHeight = prince.isSliding ? 25 : 55
     ctx.fillRect(prince.x + 8, princeY - 12, prince.width - 16, bodyHeight)
 
+    ctx.fillStyle = '#FFE4C4'
+    ctx.fillRect(prince.x + 10, princeY - 47, 30, 35)
+
     ctx.fillStyle = '#4169E1'
-    if (prince.isSliding) {
-      ctx.fillRect(prince.x - 10, princeY - 5, 20, 15)
-      ctx.fillRect(prince.x + prince.width - 10, princeY - 5, 20, 15)
-    } else {
-      ctx.fillRect(prince.x + 5, princeY - 5, 15, 40)
-      ctx.fillRect(prince.x + prince.width - 20, princeY - 5, 15, 40)
-    }
-
-    ctx.fillStyle = '#654321'
-    ctx.fillRect(prince.x + prince.width / 2 - 5, princeY - 80, 10, 20)
-
-    ctx.fillStyle = '#C0C0C0'
     ctx.beginPath()
-    ctx.moveTo(prince.x + prince.width / 2, princeY - 85)
-    ctx.lineTo(prince.x + prince.width / 2 - 15, princeY - 100)
-    ctx.lineTo(prince.x + prince.width / 2 + 15, princeY - 100)
-    ctx.closePath()
+    ctx.arc(prince.x + 25, princeY - 50, 18, Math.PI, 2 * Math.PI)
+    ctx.fill()
+
+    ctx.fillStyle = '#1E3A8A'
+    ctx.fillRect(prince.x - 8, princeY - 55, 66, 8)
+
+    ctx.fillStyle = '#1E3A8A'
+    ctx.fillRect(prince.x - 15, princeY - 50, 25, 6)
+
+    ctx.fillStyle = '#FFD700'
+    ctx.beginPath()
+    ctx.arc(prince.x + 25, princeY - 68, 4, 0, Math.PI * 2)
     ctx.fill()
 
     ctx.fillStyle = '#000'
-    ctx.beginPath()
-    ctx.arc(prince.x + 17, princeY - 52, 3, 0, Math.PI * 2)
-    ctx.arc(prince.x + 33, princeY - 52, 3, 0, Math.PI * 2)
-    ctx.fill()
+    ctx.fillRect(prince.x + 14, princeY - 42, 6, 6)
+    ctx.fillRect(prince.x + 30, princeY - 42, 6, 6)
 
-    ctx.strokeStyle = '#000'
-    ctx.lineWidth = 2
+    ctx.fillStyle = '#000'
     ctx.beginPath()
-    ctx.arc(prince.x + 25, princeY - 42, 8, 0, Math.PI)
+    ctx.arc(prince.x + 25, princeY - 32, 5, 0.1 * Math.PI, 0.9 * Math.PI)
     ctx.stroke()
+
+    ctx.fillStyle = '#FFD700'
+    ctx.fillRect(prince.x + 6, princeY - 3, 12, 18)
+    ctx.fillRect(prince.x + prince.width - 18, princeY - 3, 12, 18)
 
     if (prince.isSliding) {
       ctx.fillStyle = '#FFD700'
